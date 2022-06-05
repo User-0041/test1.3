@@ -1,5 +1,6 @@
 <template>
 
+
 <div class="tabel_div"  style="border-radius:10%">
 <div  sty>
 
@@ -26,12 +27,12 @@
       <template v-slot:activator="{ on, attrs }">
      <v-btn  large class="tabel_button"  v-bind="attrs"
           v-on="on"  style="display: inline-block; padding:1rem; ;">Add Product
-          Open Dialog
+        
         </v-btn>
       </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">User Profile</span>
+          <span class="text-h5">Product Detlies</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -42,8 +43,10 @@
                 md="4"
               >
                 <v-text-field
-                  label="Legal first name*"
+                  label="Product Ref"
                   required
+                  v-model="ref"
+
                 ></v-text-field>
               </v-col>
               <v-col
@@ -52,58 +55,26 @@
                 md="4"
               >
                 <v-text-field
-                  label="Legal middle name"
+                  label="Product Name"
                   hint="example of helper text only on focus"
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-                md="4"
-              >
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
+                    v-model="nomArt"
                   required
+
                 ></v-text-field>
               </v-col>
+      
               <v-col cols="12">
-                <v-text-field
-                  label="Email*"
+                <v-textarea
+                  label="Product Descrtiption"
                   required
-                ></v-text-field>
+                  v-model="DescArt"
+                ></v-textarea>
               </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Password*"
-                  type="password"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col
-                cols="12"
-                sm="6"
-              >
-                <v-autocomplete
-                  :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
-              </v-col>
+ 
+        
             </v-row>
           </v-container>
-          <small>*indicates required field</small>
+         
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -117,7 +88,86 @@
           <v-btn
             color="blue darken-1"
             text
+            
+            @click="Create()"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+
+     <v-dialog
+      v-model="dialogUpdate"
+      persistent
+      max-width="600px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="text-h5">Update Detlies</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  label="Product Ref"
+                  required
+                  v-model="ref"
+                  v
+
+                ></v-text-field>
+
+              </v-col>
+              <v-col
+                cols="12"
+                sm="6"
+                md="4"
+              >
+                <v-text-field
+                  label="Product Name"
+                  hint="example of helper text only on focus"
+                    v-model="nomArt"
+                  required
+
+                ></v-text-field>
+              </v-col>
+      
+              <v-col cols="12">
+                <v-textarea
+                  label="Product Descrtiption"
+                  required
+                  v-model="DescArt"
+                ></v-textarea>
+              </v-col>
+ 
+        
+        
+            </v-row>
+          </v-container>
+         
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
             @click="dialog = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            
+            @click="Update()"
           >
             Save
           </v-btn>
@@ -144,10 +194,13 @@
       <thead >
         <tr>
           <th >
-            Name
+            Ref
           </th>
           <th >
-            Calories
+            Name
+          </th>
+            <th >
+            Descrptions
           </th>
            <th class="text-center">
             Actions
@@ -155,228 +208,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-
+   
         
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
+  
+
+        <tr v-for="item in Arts" :key="item.ref">
+
+          <td>{{item.ref}}</td>
+          <td>{{item.nomArt}}</td>
+          <td>{{item.DescArt}}</td>
           <td>
             <div class="div_center">
               <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-            <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>  <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>  <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>  <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-
-         <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr> <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr> <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr> <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>Art</td>
-          <td>Art</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
-            </div>
-
-
-          </td>
-
-        </tr>
-        <tr>
-          <td>TAHAHANN</td>
-          <td>TAHANNNNNNNNNNN</td>
-          <td>
-            <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
-              <v-btn class="tabel_button">Update</v-btn>
-              <v-btn class="tabel_button">Consolte</v-btn>
+              <v-btn class="tabel_button" @click="OpenUpdate(item.ref,item.nomArt,item.DescArt)" >Update</v-btn>
             </div>
 
 
@@ -392,15 +236,90 @@
 </template>
 
 <script>
-
-
-
-
-
+import axios from "axios";
 export default {
-  data: () => ({
+  data: () => (
+    
+    {
       dialog: false,
-    })
+      dialogUpdate:false,
+      ref: "",
+      refOld: "",
+      nomArt: "",
+      DescArt: "",
+      Arts:[]
+
+    }),
+     methods: {
+       OpenUpdate(A,B,C){
+
+
+        this.dialogUpdate=true;
+        this.ref=A
+        this.refOld=A
+        this.nomArt=B
+        this.DescArt=C
+
+      
+
+
+       },Update(){
+         const options = {
+  method: 'PUT',
+  url: 'http://localhost:3001/api/article',
+  params: {refOld:this.refOld , ref: this.ref, nomArt: this.nomArt, DescArt: this.DescArt}
+};
+
+axios.request(options).then((response) =>{
+  
+  console.log(response.data);
+  this.dialogUpdate=false
+  this.Arts=response.data
+}).catch(function (error) {
+  console.error(error);
+});
+
+       },
+
+
+    Create() {
+  
+
+      const options = {
+  method: 'POST',
+  url: 'http://localhost:3001/api/article',
+  params: {ref: this.ref, nomArt: this.nomArt, DescArt: this.DescArt},
+  headers: {'content-type': 'multipart/form-data; boundary=---011000010111000001101001'},
+  data: '[form]'
+};
+
+axios.request(options).then((response)=> {
+  this.dialog=false;
+  console.log(response.data)
+  console.log(this.Arts.push(options.params))
+
+  console.log(this.Arts)
+  
+}).catch(function (error) {
+  console.log(error)
+ alert("Product all redt")
+});
+    }}, 
+    created() {
+    
+    const options = {method: 'GET', url: 'http://localhost:3001/api/article'};
+axios.request(options).then( (response)=> {
+ 
+  console.log(response.data)
+  this.Arts=response.data;
+
+
+
+
+}).catch(function (error) {
+  console.error(error);
+});
+  }
     
     
 }

@@ -73,8 +73,8 @@ data(){
     visible:false,
     links :[
      {icon: 'mdi-view-dashboard', text:'Dashboard',route:'/'},
-     {icon: 'mdi-plus', text:'Add Article',route:'/GestionA'},
-     {icon: 'mdi-cogs', text:'Liste Article',route:'/GestionA'},
+     {icon: 'mdi-plus', text:'Liste Article',route:'/GestionA'},
+     {icon: 'mdi-cogs', text:'Liste Fornissor',route:'/GestionF'},
      
     ],
     }},
