@@ -75,6 +75,7 @@ data(){
      {icon: 'mdi-view-dashboard', text:'Dashboard',route:'/'},
      {icon: 'mdi-plus', text:'Liste Article',route:'/GestionA'},
      {icon: 'mdi-cogs', text:'Liste Fornissor',route:'/GestionF'},
+     {icon: 'mdi-cogs', text:'Liste Stock',route:'/GestionS'},
      
     ],
     }},

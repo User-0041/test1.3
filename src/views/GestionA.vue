@@ -9,7 +9,7 @@
   
   <v-list-item style="padding-left:0;width: 400px; display: inline-block;" >
     <v-list-item-content>
-      <v-text-field v-model="searchTerm" solo style="padding:0% ;" placeholder="Search" @input="searchFruits"></v-text-field>
+      <v-text-field v-model="searchTerm" solo style="padding:0% ;" placeholder="Search" @input="Search()"></v-text-field>
       
 
     </v-list-item-content>
@@ -103,7 +103,7 @@
       persistent
       max-width="600px"
     >
-      <template v-slot:activator="{ on, attrs }">
+      <template >
       </template>
       <v-card>
         <v-card-title>
@@ -159,7 +159,7 @@
           <v-btn
             color="blue darken-1"
             text
-            @click="dialog = false"
+            @click="Close()"
           >
             Close
           </v-btn>
@@ -219,7 +219,7 @@
           <td>{{item.DescArt}}</td>
           <td>
             <div class="div_center">
-              <v-btn class="tabel_button">Remove</v-btn>
+              <v-btn class="tabel_button" @click="Remove(item.ref)">Remove</v-btn>
               <v-btn class="tabel_button" @click="OpenUpdate(item.ref,item.nomArt,item.DescArt)" >Update</v-btn>
             </div>
 
@@ -247,10 +247,18 @@ export default {
       refOld: "",
       nomArt: "",
       DescArt: "",
+      searchTerm:"",
       Arts:[]
 
     }),
      methods: {
+         Close(){
+         this.dialog=false;
+         this.dialogUpdate=false;
+           this.ref=""
+  this.nomArt=""
+  this.DescArt=""
+       },
        OpenUpdate(A,B,C){
 
 
@@ -263,11 +271,51 @@ export default {
       
 
 
-       },Update(){
+       },Search(){
+
+
+         const options = {method: 'POST', url: 'http://localhost:3001/api/articles', params: {ref:this.searchTerm},
+         
+           headers: {Authorization: 'Bearer '+localStorage.getItem('token')}
+         };
+
+axios.request(options).then( (response)=> {
+  console.log(response.data);
+  this.Arts=response.data;
+}).catch(function (error) {
+  console.error(error);
+});
+       }
+       
+       
+       ,Remove(id){
+         const options = {
+  method: 'DELETE',
+  url: 'http://localhost:3001/api/article',
+  params: {ref: id},
+           headers: {Authorization: 'Bearer '+localStorage.getItem("token")}
+
+};
+
+axios.request(options).then( (response)=> {
+  console.log(response.data);
+  this.Arts=response.data
+
+}).catch(function (error) {
+  console.error(error);
+});
+
+
+       }
+       
+       
+       ,Update(){
          const options = {
   method: 'PUT',
   url: 'http://localhost:3001/api/article',
-  params: {refOld:this.refOld , ref: this.ref, nomArt: this.nomArt, DescArt: this.DescArt}
+  params: {refOld:this.refOld , ref: this.ref, nomArt: this.nomArt, DescArt: this.DescArt},
+           headers: {Authorization: 'Bearer '+localStorage.getItem("token")}
+
 };
 
 axios.request(options).then((response) =>{
@@ -289,16 +337,22 @@ axios.request(options).then((response) =>{
   method: 'POST',
   url: 'http://localhost:3001/api/article',
   params: {ref: this.ref, nomArt: this.nomArt, DescArt: this.DescArt},
-  headers: {'content-type': 'multipart/form-data; boundary=---011000010111000001101001'},
-  data: '[form]'
+
+           headers: {Authorization: 'Bearer '+localStorage.getItem("token")},
+
 };
 
 axios.request(options).then((response)=> {
   this.dialog=false;
-  console.log(response.data)
-  console.log(this.Arts.push(options.params))
+  console.log(response)
+  this.Arts.push(options.params)
 
-  console.log(this.Arts)
+  this.ref="";
+  this.nomArt="";
+  this.DescArt="";
+
+
+
   
 }).catch(function (error) {
   console.log(error)
@@ -307,7 +361,10 @@ axios.request(options).then((response)=> {
     }}, 
     created() {
     
-    const options = {method: 'GET', url: 'http://localhost:3001/api/article'};
+    const options = {method: 'GET', url: 'http://localhost:3001/api/article',
+           headers: {Authorization: 'Bearer '+localStorage.getItem("token")}
+
+    };
 axios.request(options).then( (response)=> {
  
   console.log(response.data)

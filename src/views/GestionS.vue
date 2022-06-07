@@ -8,8 +8,10 @@
 
   
   <v-list-item style="padding-left:0;width: 400px; display: inline-block;" >
-    <v-list-item-content>
-      <v-text-field v-model="searchTerm" solo style="padding:0% ;" placeholder="Search" @input="Search()"></v-text-field>
+  
+     <v-list-item-content >
+      <v-text-field v-model="searchTermRefFern" solo style="padding:0% ;  display: inline-block;" placeholder="Ref" @input="Search()"></v-text-field>
+
       
 
     </v-list-item-content>
@@ -18,6 +20,7 @@
 
 
   
+      <v-text-field v-model="searchTermRef" solo style="padding:0.5% ;  width: 23%; display: inline-block;" placeholder="RefFern" @input="Search()"></v-text-field>
 
   <v-dialog
       v-model="dialog"
@@ -25,6 +28,7 @@
       max-width="600px"
     >
       <template v-slot:activator="{ on, attrs }">
+
      <v-btn  large class="tabel_button"  v-bind="attrs"
           v-on="on"  style="display: inline-block; padding:1rem; ;">Add Fornnisseur
         
@@ -32,7 +36,7 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="text-h5">Fornnisseur Detlies</span>
+          <span class="text-h5">Stock Detlies</span>
         </v-card-title>
         <v-card-text>
           <v-container>
@@ -42,48 +46,47 @@
                 sm="6"
                 md="4"
               >
-                <v-text-field
-                  label="Fornnisseur Ref"
-                  required
-                  v-model="refFern"
-
-                ></v-text-field>
+              
+                <v-autocomplete
+            
+            v-model="refFern"
+            :items="items"
+            dense
+            filled
+            label="RefFern"
+            ></v-autocomplete>
+ 
               </v-col>
               <v-col
                 cols="12"
                 sm="6"
                 md="4"
               >
-                <v-text-field
-                  label="Fornnisseur nom "
-                  hint="example of helper text only on focus"
-                    v-model="NomFern"
-                  required
-
-                ></v-text-field>
+                <v-autocomplete
+            
+            v-model="ref"
+            :items="items2"
+            dense
+            filled
+            label="Ref"
+            ></v-autocomplete>
+ 
               </v-col>
+     
                  <v-col
                 cols="12"
                 sm="6"
                 md="4"
               >
                 <v-text-field
-                  label="Fornnisseur Tel"
-                  hint="example of helper text only on focus"
-                    v-model="TelFern"
+                  label="Stock"
+              
+                    v-model="Stockvalue"
                   required
 
                 ></v-text-field>
               </v-col>
-      
-              <v-col cols="12">
-                <v-text-field
-                  label="Fornnisseur Descrtiption"
-                  required
-                  v-model="EmailFern"
-                ></v-text-field>
-              </v-col>
- 
+          
         
             </v-row>
           </v-container>
@@ -133,7 +136,7 @@
                 <v-text-field
                   label="Fornnisseur Ref"
                   required
-                  v-model="refFern"
+                
 
                 ></v-text-field>
               </v-col>
@@ -145,7 +148,7 @@
                 <v-text-field
                   label="Fornnisseur Name"
                   hint="example of helper text only on focus"
-                    v-model="NomFern"
+                  
                   required
 
                 ></v-text-field>
@@ -158,17 +161,18 @@
                 <v-text-field
                   label="Fornnisseur tel"
                   hint="example of helper text only on focus"
-                    v-model="TelFern"
+            
                   required
 
                 ></v-text-field>
               </v-col>
+              
       
               <v-col cols="12">
                 <v-text-field
                   label="Fornnisseur Email"
                   required
-                  v-model="EmailFern"
+                 
                 ></v-text-field>
               </v-col>
  
@@ -220,14 +224,12 @@
             Ref
           </th>
           <th >
-            Name
-          </th>
-            <th >
-            TELL
+            refFern
           </th>
            <th >
-            Email
+            Stock
           </th>
+           
            <th class="text-center">
             Actions
           </th>
@@ -238,17 +240,17 @@
         
   
 
-        <tr v-for="item in Ferns" :key="item.ref">
+        <tr v-for="item in Stock" :key="item.ref+item.refFern">
 
           <td>{{item.refFern}}</td>
-          <td>{{item.NomFern}}</td>
+          <td>{{item.ref}}</td>
+          <td>{{item.Stock}}</td>
 
-          <td>{{item.TelFern}}</td>
-          <td>{{item.EmailFern}}</td>
+
+
           <td>
             <div class="div_center">
-              <v-btn class="tabel_button" @click="Remove(item.refFern)">Remove</v-btn>
-              <v-btn class="tabel_button" @click="OpenUpdate(item.refFern,item.NomFern,item.EmailFern,item.TelFern)" >Update</v-btn>
+              <v-btn class="tabel_button" @click="OpenUpdate(item.refFern,item.ref,item.Stock)" >Update</v-btn>
             </div>
 
 
@@ -271,44 +273,50 @@ export default {
     {
       dialog: false,
       dialogUpdate:false,
+      searchTermRefFern:"",
+      searchTermRef:"",
       refFern: "",
-      refFernOld: "",
-      NomFern: "",
-      EmailFern: "",
-      TelFern: "",
+      ref:"",
+      Stockvalue:"",
+      items:[],
+      items2:[],
 
       searchTerm:"",
-      Ferns:[]
+      Stock:[]
 
     }),
      methods: {
 
        Close(){
-         this.dialog=false;
-         this.dialogUpdate=false;
+           
+           this.dialog=false;
+           this.ref=""
            this.refFern=""
-  this.NomFern=""
-  this.EmailFern=""
-  this.TelFern=""
+           this.Stockvalue=""
+
        },
-       OpenUpdate(A,B,C,D){
-        this.dialogUpdate=true;
-        this.refFernOld=A;
-this.refFern=A;
-this.NomFern=B;
-this.EmailFern=C;
-this.TelFern=D;
+       OpenUpdate(A,B,C){
+
+           this.dialog=true;
+           this.ref=B
+           this.refFern=A
+           this.Stockvalue=C
+
        }
 
 
 
        ,Search(){
 
-   const options = {method: 'GET', url: 'http://localhost:3001/api/Fornis', params: {refFern: this.searchTerm}};
+        const options = {
+  method: 'GET',
+  url: 'http://localhost:3001/api/stockt',
+  params: {refFernKeyWord: this.searchTermRefFern, RefKeyWord: this.searchTermRef}
+};
 
 axios.request(options).then( (response)=> {
   console.log(response.data);
-    this.Ferns=response.data;
+     this.Stock=response.data;
 
 }).catch(function (error) {
   console.error(error);
@@ -321,85 +329,72 @@ axios.request(options).then( (response)=> {
        ,Remove(ref){
       
 
-const options = {
-  method: 'DELETE',
-  url: 'http://localhost:3001/api/Forni',
-  params: {refFern: ref}
-};
-
-axios.request(options).then( (response)=> {
-
-  console.log(response.data);
-    this.Ferns=response.data;
-
-
-}).catch(function (error) {
-  console.error(error);
-});
 
        }
        
        
        ,Update(){
 
-const options = {
-  method: 'PUT',
-  url: 'http://localhost:3001/api/Forni',
-  params: {refFern: this.refFern, NomFern: this.NomFern, EmailFern: this.EmailFern, TelFern: this.TelFern, refFernOld: this.refFernOld}
-};
-
-axios.request(options).then( (response)=> {
-
-  console.log(response.data);
-  this.Ferns=response.data;
-    this.dialogUpdate=false
-  this.refFern=""
-  this.NomFern=""
-  this.EmailFern=""
-  this.TelFern=""
-}).catch(function (error) {
-  console.error(error);
-});
 
        },
 
 
     Create() {
-
 const options = {
   method: 'POST',
-  url: 'http://localhost:3001/api/Forni',
-  params: {refFern: this.refFern, NomFern: this.NomFern, EmailFern: this.EmailFern, TelFern: this.TelFern}
+  url: 'http://localhost:3001/api/stock',
+  params: {refFern: this.refFern, ref: this.ref, Stock:this.Stockvalue}
 };
+
 axios.request(options).then( (response)=> {
+    this.dialog=false
+    this.Stock=response.data
   console.log(response.data);
-  this.Ferns=response.data;
-  this.dialog=false
-  this.refFern=""
-  this.NomFern=""
-  this.EmailFern=""
-  this.TelFern=""
-
-
 }).catch(function (error) {
   console.error(error);
 });
+
 
     }
     
      }, 
     created() {
-
-
-
-      const options = {method: 'GET', url: 'http://localhost:3001/api/Forni'};
+        let options = {
+  method: 'GET',
+  url: 'http://localhost:3001/api/Forni',
+};
 
 axios.request(options).then( (response)=> {
-  console.log(response.data);
-  this.Ferns=response.data;
+  let a =response.data
+    
+  this.items=a.map(a=>a.refFern)
 }).catch(function (error) {
   console.error(error);
 });
+
+ options = {
+  method: 'GET',
+  url: 'http://localhost:3001/api/Article',
+
+};
+
+axios.request(options).then( (response)=> {
+    let a =response.data
+    
+  this.items2=a.map(a=>a.ref)
+}).catch(function (error) {
+  console.error(error);
+});
+         options = {method: 'GET', url: 'http://localhost:3001/api/stock'};
+
+axios.request(options).then( (response)=> {
+    this.Stock=response.data;
+
+}).catch(function (error) {
+  console.error(error);
+});
+
+
     }
 }
 </script>
